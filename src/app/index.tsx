@@ -1,74 +1,70 @@
-import axios from 'axios';
-import { useContext, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { AuthContext } from './contexts/authContext';
-import { api } from './libs/axios';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { z } from 'zod';
+import { useAuth } from '../app/contexts/authContext';
 
-export default function Screen() {
-  const [movieCount, setMovieCount] = useState(0);
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6)
+});
 
-  const auth = useContext(AuthContext);
+export default function LoginScreen() {
+  const router = useRouter();
+  const { login } = useAuth();
 
-  const handleClick = async () => {
-    const response = await axios.get('https://reactnative.dev/movies.json', {
-      params: {
-        genere: 'action'
-      }
-    });
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
-    if (response.status === 200) {
-      console.log(response.data.movies);
-      setMovieCount(response.data.movies.length);
+  function handleSubmit() {
+    const result = loginSchema.safeParse({ email, password });
+
+    if (!result.success) {
+      setErrorMsg('Email inválido ou senha muito curta.');
+      return;
     }
-  };
 
-  const handleClickPost = async () => {
-    const response = await api.post(
-      '/posts',
-      //const response = await axios.post(
-      // 'https://jsonplaceholder.typicode.com/posts',
-      {
-        title: 'foo',
-        body: 'bar',
-        userId: 1
-      }
-    );
-    if (response.status === 201) {
-      console.log(response.data);
+    // Armazena o e-mail do usuário no estado global da aplicação
+    if (email === 'ddm@gmail.com' && password === '123456') {
+      login(email);
+      router.push('/profile');
+    } else {
+      setErrorMsg('Email ou senha incorretos.');
+      return;
     }
-  };
-
-  const handleClickUser = async () => {
-    auth?.setData('Talytha');
-  };
+  }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}
-    >
-      <Text style={styles.moviecount}>Filmes: {movieCount}.</Text>
-      <View style={{ marginBottom: 20 }}>
-        <Button title="Carregar" onPress={handleClick} />
-      </View>
-      <View style={{ marginBottom: 20 }}>
-        <Button title="Inserir novo post" onPress={handleClickPost} />
-      </View>
-      <View style={{ marginBottom: 20 }}>
-        <Button title="mudar usario" onPress={handleClickUser} />
-      </View>
-      <Text>nome do usuario: {auth?.data}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Senha"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+
+      {errorMsg !== '' && <Text style={styles.error}>{errorMsg}</Text>}
+
+      <Button title="Entrar" onPress={handleSubmit} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  moviecount: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 20
-  }
+  container: { padding: 20, flex: 1, justifyContent: 'center' },
+  input: { borderBottomWidth: 1, marginBottom: 10, padding: 8 },
+  title: { fontSize: 24, marginBottom: 20, textAlign: 'center' },
+  error: { color: 'red', marginBottom: 10 }
 });

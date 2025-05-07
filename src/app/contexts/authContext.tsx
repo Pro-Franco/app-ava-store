@@ -1,23 +1,30 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 
-type authContextType = null | {
-  data: string;
-  setData: (data: string) => void;
+type User = { email: string };
+
+type AuthContextType = {
+  user: User | null;
+  login: (email: string) => void;
+  logout: () => void;
 };
 
-export const AuthContext = createContext<authContextType>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-//provider ambindo o contexto com o componente
-//context recebo informacoes do provider
-type Props = {
-  children: ReactNode;
-};
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
 
-export const AuthProvider = ({ children }: Props) => {
-  const [data, setData] = useState('ciclano');
+  const login = (email: string) => setUser({ email });
+  const logout = () => setUser(null);
+
   return (
-    <AuthContext.Provider value={{ data, setData }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (!context) throw new Error('useAuth precisa estar dentro do AuthProvider');
+  return context;
+}
