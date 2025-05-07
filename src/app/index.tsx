@@ -18,6 +18,8 @@ export default function LoginScreen() {
   const [errorMsg, setErrorMsg] = useState('');
 
   function handleSubmit() {
+    //O que safeParse(...) faz?
+    //O safeParse tenta validar os dados que você passa.
     const result = loginSchema.safeParse({ email, password });
 
     if (!result.success) {
