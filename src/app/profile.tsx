@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { Button, StyleSheet, Text, View } from 'react-native';
-import { useAuth } from '../app/contexts/authContext';
+import { useAuth } from '../hooks/useAuth';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
@@ -11,9 +11,16 @@ export default function ProfileScreen() {
     router.replace('/');
   }
 
+  function handleClientes() {
+    router.push('/components/clientes');
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Bem-vindo, {user?.email}</Text>
+
+      <Button title="Clientes" onPress={handleClientes} />
+
       <Button title="Sair" onPress={handleLogout} />
     </View>
   );

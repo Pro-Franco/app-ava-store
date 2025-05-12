@@ -2,7 +2,8 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { z } from 'zod';
-import { useAuth } from '../app/contexts/authContext';
+import { useAuth } from '../hooks/useAuth';
+//import { useAuth } from '../app/contexts/authContext';
 
 const loginSchema = z.object({
   email: z.string().email(),

@@ -6,9 +6,9 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    let loggedUser = 91;
+    //let loggedUser = 91;
 
-    config.data.userId = loggedUser;
+    //config.data.userId = loggedUser;
 
     return config;
   },
