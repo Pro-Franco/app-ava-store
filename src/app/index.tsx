@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { z } from 'zod';
 import { useAuth } from '../hooks/useAuth';
-//import { useAuth } from '../app/contexts/authContext';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -14,8 +13,8 @@ export default function LoginScreen() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('ddm@gmail.com');
+  const [password, setPassword] = useState('123456');
   const [errorMsg, setErrorMsg] = useState('');
 
   function handleSubmit() {

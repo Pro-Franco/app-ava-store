@@ -43,6 +43,7 @@ const Clientes = () => {
     }
   };
 
+  
   // Função para excluir um cliente
   const handleDelete = async (id: number) => {
     try {
