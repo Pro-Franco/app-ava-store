@@ -1,13 +1,25 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const [token, setToken] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   async function saveToken(token: string) {
     await AsyncStorage.setItem('userToken', token);
@@ -28,12 +40,31 @@ export default function ProfileScreen() {
     router.replace('/');
   }
 
+  function handleExemplos() {
+    router.push('/components/exemplo');
+  }
+
   function handleClientes() {
     router.push('/components/clientes');
   }
 
+  function handleCalendario() {
+    router.push('/components/calendario');
+  }
+
   return (
     <View style={styles.container}>
+      {loading && (
+        <View style={{ flexDirection: 'row', gap: 10, marginBottom: 5 }}>
+          <ActivityIndicator />
+          <ActivityIndicator size="large" />
+          <ActivityIndicator size="small" color="#0000ff" />
+          <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+      )}
+
+      <Button title="Parar loading" onPress={() => setLoading(false)} />
+
       <Text style={styles.text}>Bem-vindo, {user?.email}</Text>
       <TextInput
         placeholder="digite o token"
@@ -70,9 +101,16 @@ export default function ProfileScreen() {
         />
       </View>
 
-      <Button title="Clientes" onPress={handleClientes} />
-
-      <Button title="Sair" onPress={handleLogout} />
+      <View style={styles.buttonContainer}>
+        <Button title="Clientes" onPress={handleClientes} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="Exemplos de componentes" onPress={handleExemplos} />
+      </View>
+      <Button title="Calendario" onPress={handleCalendario} />
+      <View style={styles.buttonContainer}>
+        <Button title="Sair" onPress={handleLogout} />
+      </View>
     </View>
   );
 }
