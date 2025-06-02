@@ -30,7 +30,7 @@ export default function LoginScreen() {
     // Armazena o e-mail do usuário no estado global da aplicação
     if (email === 'ddm@gmail.com' && password === '123456') {
       login(email);
-      router.push('/profile');
+      router.push('/dashboard/profile');
     } else {
       setErrorMsg('Email ou senha incorretos.');
       return;

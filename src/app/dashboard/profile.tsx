@@ -9,7 +9,7 @@ import {
   TextInput,
   View
 } from 'react-native';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../../src/hooks/useAuth';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
@@ -41,15 +41,11 @@ export default function ProfileScreen() {
   }
 
   function handleExemplos() {
-    router.push('/components/exemplo');
+    router.push('../dashboard/exemplo');
   }
 
   function handleClientes() {
-    router.push('/components/clientes');
-  }
-
-  function handleCalendario() {
-    router.push('/components/calendario');
+    router.push('../dashboard/clientes');
   }
 
   return (
@@ -107,7 +103,7 @@ export default function ProfileScreen() {
       <View style={styles.buttonContainer}>
         <Button title="Exemplos de componentes" onPress={handleExemplos} />
       </View>
-      <Button title="Calendario" onPress={handleCalendario} />
+
       <View style={styles.buttonContainer}>
         <Button title="Sair" onPress={handleLogout} />
       </View>

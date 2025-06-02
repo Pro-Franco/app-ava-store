@@ -12,7 +12,9 @@ import {
 import {
   Button,
   Checkbox,
-  Provider as PaperProvider
+  FAB,
+  Provider as PaperProvider,
+  Portal
 } from 'react-native-paper';
 
 export default function Exemplo() {
@@ -25,6 +27,8 @@ export default function Exemplo() {
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [fabOpen, setFabOpen] = useState(false);
 
   const onChangeDate = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || date;
@@ -44,6 +48,30 @@ export default function Exemplo() {
 
   return (
     <PaperProvider>
+      <Text>Tela com FAB flutuante</Text>
+
+      <Portal>
+        <FAB.Group
+          visible={true} // ✅ ESSENCIAL
+          open={fabOpen}
+          icon={fabOpen ? 'calendar-today' : 'plus'}
+          actions={[
+            { icon: 'plus', label: 'Add', onPress: () => console.log('Add') },
+            {
+              icon: 'email',
+              label: 'Email',
+              onPress: () => console.log('Email')
+            }
+          ]}
+          onStateChange={({ open }) => setFabOpen(open)}
+          onPress={() => {
+            if (fabOpen) {
+              console.log('FAB Pressed!');
+            }
+          }}
+        />
+      </Portal>
+
       <View style={styles.container}>
         <Text style={styles.label}>ComboBox (Picker):</Text>
         <Picker
